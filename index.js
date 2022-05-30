@@ -8,7 +8,6 @@ let schedule = require("node-schedule");
 const provider = new nearAPI.providers.JsonRpcProvider(nearConfig.nodeUrl);
 //const {Pool} = require('pg')
 //const pool = new Pool({connectionString: constants.INDEXER})
-
 // const BN = require('bn.js')
 // const js_sha256 = require('js-sha256')
 
