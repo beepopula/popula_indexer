@@ -2,7 +2,6 @@ const nearAPI = require('near-api-js')
 const config = require("config")
 const nearConfig = config.get('nearWallet')
 const constants = config.get('constants');
-
 const model = require('./db.js')
 const timer = require('./libraries/schedule/timerMethod');
 let schedule = require("node-schedule");
