@@ -638,7 +638,6 @@ async function asyncUserToPopula() {
                 joinFlag: false,
                 creator: 0})
     }
-
 }
 
 async function initBlockModel(){
