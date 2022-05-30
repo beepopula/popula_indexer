@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "config": "^3.3.7",
+    "glob": "6.0.4",
+    "js-sha256": "^0.9.0",
+    "moment": "^2.18.1",
+    "mongoose": "^6.2.3",
+    "near-api-js": "^0.44.2",
+    "node-schedule": "^2.1.0",
+    "path": "^0.12.7",
+    "pg": "^8.7.3"
+  }
+}
