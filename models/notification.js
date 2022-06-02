@@ -7,6 +7,7 @@ let schema = require('./base/model')({
     operation: {type: Boolean, default: false},
     type: {type: String, default: ''},
     comment: {type: {}, default: {}},
+    post: {type: {}, default: {}},
     commentContent: {type: {}, default: {}},
     data: {type: {}, default: {}},
     createAt: {type: Number, default: 0},

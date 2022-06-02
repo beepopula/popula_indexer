@@ -530,7 +530,7 @@ async function insertNotifications(m, timestamp) {
     let Post = model['post'];
     let Notification = model['notification'];
 
-    if ((m.methodName == 'add_comment' || m.methodName == 'add_encrypt_comment' || m.methodName == 'add_post' || m.methodName == 'add_encrypt_post') && m.status.SuccessValue) {
+    if ((m.methodName == 'add_comment' || m.methodName == 'add_encrypt_comment' ) && m.status.SuccessValue) {
         let comment = await Comment.getRow({target_hash: m.status.SuccessValue})
         if (comment) {
             delete comment['data']
@@ -573,10 +573,11 @@ async function insertNotifications(m, timestamp) {
                 accountId: post.accountId,
                 account_id: m.accountId,
                 target_hash: m.status.SuccessValue,
-                comment: post,
-                commentContent: post,
+                post: post,
+                comment: {},
+                commentContent: {},
                 methodName: m.methodName,
-                type: "comment",
+                type: "post",
                 createAt: timestamp,
             }
             await Notification.createRow(doc)
