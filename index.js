@@ -581,7 +581,6 @@ async function insertNotifications(m, timestamp) {
             }
             await Notification.createRow(doc)
         } else {
-
             console.log(m.methodName, " : ", m.status.SuccessValue);
         }
 
