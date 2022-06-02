@@ -604,12 +604,15 @@ async function insertNotifications(m, timestamp) {
         let doc = {
             accountId: m.accountId,
             account_id: d.accountId,
-            ...d,
             methodName: m.methodName,
             type: "follow",
+            ...d,
+
             createAt: timestamp,
         }
-        await Notification.updateOrInsertRow({accountId: m.accountId,account_id: d.accountId,methodName: m.methodName,},doc)
+        await Notification.updateOrInsertRow({  accountId: m.accountId,
+            account_id: d.accountId,
+            methodName: m.methodName},doc)
     }
 }
 
