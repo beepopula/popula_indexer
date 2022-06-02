@@ -562,6 +562,31 @@ async function insertNotifications(m, timestamp) {
         }
 
     }
+
+    if (( m.methodName == 'add_post' || m.methodName == 'add_encrypt_post') && m.status.SuccessValue) {
+        let post = await Post.getRow({target_hash: m.status.SuccessValue})
+        if (post) {
+            delete post['data']
+            delete post['text_sign']
+
+            let doc = {
+                accountId: post.accountId,
+                account_id: m.accountId,
+                target_hash: m.status.SuccessValue,
+                comment: post,
+                commentContent: post,
+                methodName: m.methodName,
+                type: "comment",
+                createAt: timestamp,
+            }
+            await Notification.createRow(doc)
+        } else {
+
+            console.log(m.methodName, " : ", m.status.SuccessValue);
+        }
+
+    }
+
     if (m.methodName == 'like') {
         let d = JSON.parse(m.args)
         let doc = {
