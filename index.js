@@ -609,7 +609,7 @@ async function insertNotifications(m, timestamp) {
             type: "follow",
             createAt: timestamp,
         }
-        await Notification.createRow(doc)
+        await Notification.updateOrInsertRow({accountId: m.accountId,methodName: m.methodName,},doc)
     }
 }
 
