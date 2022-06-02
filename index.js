@@ -597,22 +597,22 @@ async function insertNotifications(m, timestamp) {
             type: "like",
             createAt: timestamp,
         }
-        await Notification.createRow(doc)
+        await Notification.updateOrInsertRow({accountId: m.accountId, target_hash: d.target_hash, methodName: m.methodName}, doc)
+
     }
     if (m.methodName == 'follow') {
         let d = JSON.parse(m.args)
         let doc = {
             accountId: m.accountId,
-            account_id: d.accountId,
+            account_id: d.account_id,
             methodName: m.methodName,
             type: "follow",
             ...d,
 
             createAt: timestamp,
         }
-        await Notification.updateOrInsertRow({  accountId: m.accountId,
-            account_id: d.accountId,
-            methodName: m.methodName},doc)
+         await Notification.updateOrInsertRow({accountId: m.accountId, account_id: d.account_id,methodName: m.methodName,}, doc)
+
     }
 }
 
