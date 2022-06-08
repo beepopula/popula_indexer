@@ -113,6 +113,7 @@ async function resolveReceipts(receipts) {
             let functionCall = receipt.receipt.Action.actions[0].FunctionCall
             let txDigest = txMap[receipt.receipt.Action.signer_id]
             if (!txDigest || !txDigest[txDigest.length - 1]) {
+                console.log("txDigest",txDigest);
                 continue
             }
             let tx = await provider.txStatus(txDigest[txDigest.length - 1].hash, txDigest[txDigest.length - 1].signer_id)
