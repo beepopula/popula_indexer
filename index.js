@@ -107,11 +107,21 @@ async function resolveTxs(transactions) {
 async function resolveReceipts(receipts) {
     let receiptsResolved = []
     for (let receipt of receipts) {
-        console.log(" m :",receipt.receiver_id.includes(constants.MAIN_ACCOUNT));
-        console.log(" m :",receipt.receiver_id);
+        try {
+            console.log(" m :",receipt.receiver_id.includes(constants.MAIN_ACCOUNT));
+            console.log(" m receiver_id:",receipt.receiver_id);
+            console.log(" m receipt:",receipt);
+            let functionCall = receipt.receipt.Action.actions[0].FunctionCall
+            console.log("method_name",functionCall.method_name);
+        }catch (e){
+
+
+        }
+
+
 
         if (receipt.receiver_id.includes(constants.MAIN_ACCOUNT) && receipt.receipt.Action && receipt.receipt.Action.actions[0].FunctionCall) {
-            console.log("receipt ",receipt);
+
             let functionCall = receipt.receipt.Action.actions[0].FunctionCall
             let txDigest = txMap[receipt.receipt.Action.signer_id]
             if (!txDigest || !txDigest[txDigest.length - 1]) {
