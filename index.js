@@ -211,7 +211,6 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
             console.log(e);
         }
 
-
         try {
             if (m.methodName == 'add_post' && m.status.SuccessValue) {
                 // console.log(" load add_post", m);
