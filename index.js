@@ -699,7 +699,7 @@ async function initBlockModel(){
     }
 }
 
-//updateDateFromLogs()
+updateDateFromLogs()
 
 
 main()
