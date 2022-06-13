@@ -5,11 +5,9 @@ let schema = require('./base/model')({
     options: {type: [], default: []},
     video: {type: String, default: ''},
     audio: {type: String, default: ''},
-
     target_hash: {type: String, default: ''},
-
+    hierarchies: {type: [], default: []},
     postId: {type: String, default: ''},
-
     commentPostId: {type: String, default: ''},
     encrypt_args: {type: String, default: ''},
     access: {type: {}, default: {}},

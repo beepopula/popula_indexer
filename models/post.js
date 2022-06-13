@@ -5,6 +5,7 @@ let schema = require('./base/model')({
     text: {type: String, default: ''},
     imgs: {type: [], default: []},
     options: {type: [], default: []},
+    hierarchies: {type: [], default: []},
     video: {type: String, default: ''},
     audio: {type: String, default: ''},
     encrypt_args: {type: String, default: ''},
