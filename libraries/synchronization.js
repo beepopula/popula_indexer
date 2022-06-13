@@ -78,4 +78,26 @@ AsyncUtil.add_comment = async function (m,timestamp) {
 AsyncUtil.add_encrypt_comment = async function (m,timestamp) {
 
 
+
+}
+
+
+async function getPostId(Comment, Post, comment) {
+
+    let comments = await Comment.getRow({target_hash: comment.postId})
+    if (comments) {
+
+        return await getPostId(Comment, Post, comments)
+
+    } else {
+
+        let post = await Post.getRow({target_hash: comment.postId})
+        if (post) {
+
+            return post.target_hash
+        } else {
+            return null
+        }
+    }
+
 }
