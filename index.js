@@ -199,6 +199,7 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
             if (m.methodName == 'add_content' && m.status.SuccessValue) {
                 // console.log(" load add_post", m);
                 let d = JSON.parse(JSON.parse(m.args).args)
+                console.log(d);
                 let hierarchies =JSON.parse(JSON.parse(m.args).hierarchies)
                 if (hierarchies.length>0){
                  await   asyncUtil.add_comment(m,timestamp)
