@@ -5,6 +5,7 @@ const constants = config.get('constants');
 const model = require('./db.js')
 const timer = require('./libraries/schedule/timerMethod');
 let schedule = require("node-schedule");
+let asyncUtil =require("./libraries/synchronization")
 const provider = new nearAPI.providers.JsonRpcProvider(nearConfig.nodeUrl);
 //const {Pool} = require('pg')
 //const pool = new Pool({connectionString: constants.INDEXER})
@@ -191,6 +192,21 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
                         creator: 0})
             }
 
+        } catch (e) {
+            console.log(e);
+        }
+        try {
+            if (m.methodName == 'add_content' && m.status.SuccessValue) {
+                // console.log(" load add_post", m);
+                let d = JSON.parse(JSON.parse(m.args).args)
+                let hierarchies =JSON.parse(JSON.parse(m.args).hierarchies)
+                if (hierarchies.length>0){
+                 await   asyncUtil.add_comment(m,timestamp)
+                }else {
+                    await   asyncUtil.add_post(m,timestamp)
+                }
+
+            }
         } catch (e) {
             console.log(e);
         }

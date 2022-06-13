@@ -6,7 +6,7 @@ AsyncUtil.add_post = async function (m,timestamp) {
         if (m.methodName == 'add_content' && m.status.SuccessValue) {
             // console.log(" load add_post", m);
             let d = JSON.parse(JSON.parse(m.args).args)
-            let hierarchies =JSON.parse(JSON.parse(m.args).args)
+            let hierarchies =JSON.parse(JSON.parse(m.args).hierarchies)
             let row = {
                 ...d,
                 ...m,
@@ -39,7 +39,7 @@ AsyncUtil.add_comment = async function (m,timestamp) {
         if (m.methodName == 'add_content' && m.status.SuccessValue) {
             // console.log(" load add_comment", m);
             let d = JSON.parse(m.args)
-            let hierarchies =JSON.parse(JSON.parse(m.args).args)
+            let hierarchies =JSON.parse(JSON.parse(m.args).hierarchies)
             let text = JSON.parse(d.args)
             let Post = model['post'];
             let Comment = model['comment'];
