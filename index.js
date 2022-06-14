@@ -370,7 +370,13 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
             console.log(e);
         }
 
-
+        try {
+            if (m.methodName == 'del_content') {
+                await asyncUtil.del_content(m, timestamp)
+            }
+        } catch (e) {
+            console.log(e);
+        }
         try {
             if (m.methodName == 'unlike') {
                 await asyncUtil.unlike(m, timestamp)

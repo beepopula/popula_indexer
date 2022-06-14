@@ -3,7 +3,7 @@ const model = require('../db.js')
 AsyncUtil.add_post = async function (m, timestamp) {
 
     try {
-        if (m.methodName == 'add_content' && m.status.SuccessValue) {
+        if (m.methodName == 'add_content' ) {
             // console.log(" load add_post", m);
             let d = JSON.parse(JSON.parse(m.args).args)
             let hierarchies = JSON.parse(m.args).hierarchies
@@ -35,7 +35,7 @@ AsyncUtil.add_encrypt_post = async function (m, timestamp) {
 
 AsyncUtil.add_comment = async function (m, timestamp) {
     try {
-        if (m.methodName == 'add_content' && m.status.SuccessValue) {
+        if (m.methodName == 'add_content' ) {
             // console.log(" load add_comment", m);
             let d = JSON.parse(m.args)
             let hierarchies = JSON.parse(m.args).hierarchies
@@ -76,6 +76,33 @@ AsyncUtil.add_comment = async function (m, timestamp) {
 
 AsyncUtil.add_encrypt_comment = async function (m, timestamp) {
 
+}
+
+AsyncUtil.del_content = async function (m, timestamp) {
+
+    try {
+        if (m.methodName == 'del_content' ) {
+            // console.log(" load add_comment", m);
+            let d = JSON.parse(m.args)
+            let hierarchies = JSON.parse(m.args).hierarchies
+            let h = hierarchies[hierarchies.length - 1]
+
+            let Post = model['post'];
+            let Comment = model['comment'];
+
+            let post = await Post.getRow({target_hash: h.target_hash})
+            if (post){
+                let update = await Post.updateOrInsertRow({target_hash: h.target_hash}, {deleted:true})
+
+            }
+            let comment = await Comment.getRow({target_hash: h.target_hash})
+            if (comment){
+                let update = await Comment.updateOrInsertRow({target_hash: h.target_hash}, {deleted:true})
+            }
+        }
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 AsyncUtil.like = async function (m, timestamp) {
@@ -130,7 +157,6 @@ AsyncUtil.unlike = async function (m, timestamp) {
 
 }
 
-
 AsyncUtil.report = async function (m, timestamp) {
     try {
         if (m.methodName == 'report') {
@@ -157,6 +183,9 @@ AsyncUtil.report = async function (m, timestamp) {
 
 
 }
+
+
+
 
 async function getPostId(Comment, Post, comment) {
 
