@@ -5,7 +5,7 @@ const constants = config.get('constants');
 const model = require('./db.js')
 const timer = require('./libraries/schedule/timerMethod');
 let schedule = require("node-schedule");
-let asyncUtil =require("./libraries/synchronization")
+let asyncUtil = require("./libraries/synchronization")
 const provider = new nearAPI.providers.JsonRpcProvider(nearConfig.nodeUrl);
 //const {Pool} = require('pg')
 //const pool = new Pool({connectionString: constants.INDEXER})
@@ -16,9 +16,10 @@ let txMap = []
 let txPerBlock = []
 let blockAsyncFlag = true
 let breakWhile = false
+
 async function main() {
     await asyncUserToPopula();
-    await  initBlockModel();
+    await initBlockModel();
     let blockModel = model['block'];
     schedule.scheduleJob('*/1 * * * * *', async function () {
         const block = await provider.block({finality: 'optimistic'});
@@ -108,15 +109,15 @@ async function resolveTxs(transactions) {
 async function resolveReceipts(receipts) {
     let receiptsResolved = []
     for (let receipt of receipts) {
-        console.log(" m :",receipt.receiver_id.includes(constants.MAIN_ACCOUNT));
-        console.log(" m :",receipt.receiver_id);
+        console.log(" m :", receipt.receiver_id.includes(constants.MAIN_ACCOUNT));
+        console.log(" m :", receipt.receiver_id);
 
         if (receipt.receiver_id.includes(constants.MAIN_ACCOUNT) && receipt.receipt.Action && receipt.receipt.Action.actions[0].FunctionCall) {
-            console.log("receipt ",receipt);
+            console.log("receipt ", receipt);
             let functionCall = receipt.receipt.Action.actions[0].FunctionCall
             let txDigest = txMap[receipt.receipt.Action.signer_id]
             if (!txDigest || !txDigest[txDigest.length - 1]) {
-                console.log("txDigest",txDigest);
+                console.log("txDigest", txDigest);
                 continue
             }
             let tx = await provider.txStatus(txDigest[txDigest.length - 1].hash, txDigest[txDigest.length - 1].signer_id)
@@ -148,7 +149,7 @@ async function resolveReceipts(receipts) {
                 gas_used,
                 status,
                 tx,
-                receipt:receipt,
+                receipt: receipt,
             })
 
         }
@@ -183,13 +184,15 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
                 let join = model['join'];
                 let u = await User.updateOrInsertRow({account_id: m.accountId}, {account_id: m.accountId})
                 let update = await join.updateOrInsertRow(
-                    {communityId:constants.MAIN_CONTRACT, accountId: m.accountId},
-                    {communityId:constants.MAIN_CONTRACT,
+                    {communityId: constants.MAIN_CONTRACT, accountId: m.accountId},
+                    {
+                        communityId: constants.MAIN_CONTRACT,
                         accountId: m.accountId,
                         createAt: timestamp,
                         weight: timestamp,
                         joinFlag: false,
-                        creator: 0})
+                        creator: 0
+                    })
             }
 
         } catch (e) {
@@ -200,11 +203,11 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
                 // console.log(" load add_post", m);
                 let d = JSON.parse(JSON.parse(m.args).args)
 
-                let hierarchies =JSON.parse(m.args).hierarchies
-                if (hierarchies.length>0){
-                 await   asyncUtil.add_comment(m,timestamp)
-                }else {
-                    await   asyncUtil.add_post(m,timestamp)
+                let hierarchies = JSON.parse(m.args).hierarchies
+                if (hierarchies.length > 0) {
+                    await asyncUtil.add_comment(m, timestamp)
+                } else {
+                    await asyncUtil.add_post(m, timestamp)
                 }
 
             }
@@ -262,13 +265,13 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
 
         try {
             if (m.methodName == 'add_item' && m.status.SuccessValue) {
-               // let d = JSON.parse(m.args)
+                // let d = JSON.parse(m.args)
                 let d = JSON.parse(JSON.parse(m.args).args)
                 let row = {
                     ...d,
-                   // ...text,
+                    // ...text,
                     ...m,
-                    predecessor_id:m.receipt.predecessor_id,
+                    predecessor_id: m.receipt.predecessor_id,
                     target_hash: m.status.SuccessValue,
                     createAt: timestamp,
                     data: m,
@@ -283,7 +286,6 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
         } catch (e) {
             console.log(e);
         }
-
 
 
         try {
@@ -360,50 +362,22 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
         }
 
 
-
         try {
             if (m.methodName == 'like') {
-
-                let d = JSON.parse(m.args)
-                let row = {
-                    ...d,
-                    ...m,
-                    // target_hash: m.status.SuccessValue,
-                    createAt: timestamp,
-                    data: m,
-                    likeFlag: false,
-
-                }
-                let like = model['like'];
-                let update = await like.updateOrInsertRow({accountId: m.accountId, target_hash: d.target_hash}, row)
-
+                await asyncUtil.like(m, timestamp)
             }
         } catch (e) {
             console.log(e);
         }
-
 
 
         try {
             if (m.methodName == 'unlike') {
-                let d = JSON.parse(m.args)
-                let row = {
-                    ...d,
-                    ...m,
-                    // target_hash: m.status.SuccessValue,
-                    createAt: timestamp,
-                    data: m,
-                    likeFlag: true,
-
-                }
-                let like = model['like'];
-                let update = await like.updateOrInsertRow({accountId: m.accountId, target_hash: d.target_hash}, row)
-
+                await asyncUtil.unlike(m, timestamp)
             }
         } catch (e) {
             console.log(e);
         }
-
 
 
         try {
@@ -489,7 +463,6 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
         }
 
 
-
         try {
             if (m.methodName == 'join') {
                 //  console.log(" load join", m);
@@ -551,7 +524,7 @@ async function insertNotifications(m, timestamp) {
     let Post = model['post'];
     let Notification = model['notification'];
 
-    if ((m.methodName == 'add_comment' || m.methodName == 'add_encrypt_comment' ) && m.status.SuccessValue) {
+    if ((m.methodName == 'add_comment' || m.methodName == 'add_encrypt_comment') && m.status.SuccessValue) {
         let comment = await Comment.getRow({target_hash: m.status.SuccessValue})
         if (comment) {
             delete comment['data']
@@ -584,7 +557,7 @@ async function insertNotifications(m, timestamp) {
 
     }
 
-    if (( m.methodName == 'add_post' || m.methodName == 'add_encrypt_post') && m.status.SuccessValue) {
+    if ((m.methodName == 'add_post' || m.methodName == 'add_encrypt_post') && m.status.SuccessValue) {
         let post = await Post.getRow({target_hash: m.status.SuccessValue})
         if (post) {
             delete post['data']
@@ -618,7 +591,11 @@ async function insertNotifications(m, timestamp) {
             type: "like",
             createAt: timestamp,
         }
-        await Notification.updateOrInsertRow({accountId: m.accountId, target_hash: d.target_hash, methodName: m.methodName}, doc)
+        await Notification.updateOrInsertRow({
+            accountId: m.accountId,
+            target_hash: d.target_hash,
+            methodName: m.methodName
+        }, doc)
 
     }
     if (m.methodName == 'follow') {
@@ -632,7 +609,11 @@ async function insertNotifications(m, timestamp) {
 
             createAt: timestamp,
         }
-         await Notification.updateOrInsertRow({accountId: m.accountId, account_id: d.account_id,methodName: m.methodName,}, doc)
+        await Notification.updateOrInsertRow({
+            accountId: m.accountId,
+            account_id: d.account_id,
+            methodName: m.methodName,
+        }, doc)
 
     }
 }
@@ -673,30 +654,43 @@ async function updateDateFromLogs() {
 
 async function asyncUserToPopula() {
     let Communities = model['communities'];
-    let row =await Communities.updateOrInsertRow({"accountId" :constants.MAIN_ACCOUNT,"communityId" : constants.MAIN_CONTRACT, },{"accountId" :constants.MAIN_ACCOUNT,"communityId" : constants.MAIN_CONTRACT,name:"popula", "deleted" : false,  })
+    let row = await Communities.updateOrInsertRow({
+        "accountId": constants.MAIN_ACCOUNT,
+        "communityId": constants.MAIN_CONTRACT,
+    }, {"accountId": constants.MAIN_ACCOUNT, "communityId": constants.MAIN_CONTRACT, name: "popula", "deleted": false,})
     let User = model['user'];
     let Join = model['join'];
-    let users =await User.getRows({})
-    for(let i =0;i<users.length;i++){
+    let users = await User.getRows({})
+    for (let i = 0; i < users.length; i++) {
         let update = await Join.updateOrInsertRow(
-            {communityId:constants.MAIN_CONTRACT, accountId: users[i]['account_id']},
-            {communityId:constants.MAIN_CONTRACT,
+            {communityId: constants.MAIN_CONTRACT, accountId: users[i]['account_id']},
+            {
+                communityId: constants.MAIN_CONTRACT,
                 accountId: users[i]['account_id'],
                 createAt: Date.now(),
-                weight:  Date.now(),
+                weight: Date.now(),
                 joinFlag: false,
-                creator: 0})
+                creator: 0
+            })
     }
 }
 
-async function initBlockModel(){
+async function initBlockModel() {
     let blockModel = model['block'];
     let row = await blockModel.getRow({"name": "optimistic"})
-    if (!row){
+    if (!row) {
         const block = await provider.block({finality: 'optimistic'});
         let final_block_height = block.header.height
-        await blockModel.updateOrInsertRow({"name": "optimistic"},{"name": "optimistic",finalBlockHeight: final_block_height,blockHeight:final_block_height})
-        await blockModel.updateOrInsertRow({"name": "optimistic_b"},{"name": "optimistic_b",finalBlockHeight: final_block_height,blockHeight:final_block_height})
+        await blockModel.updateOrInsertRow({"name": "optimistic"}, {
+            "name": "optimistic",
+            finalBlockHeight: final_block_height,
+            blockHeight: final_block_height
+        })
+        await blockModel.updateOrInsertRow({"name": "optimistic_b"}, {
+            "name": "optimistic_b",
+            finalBlockHeight: final_block_height,
+            blockHeight: final_block_height
+        })
     }
 }
 

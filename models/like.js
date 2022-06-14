@@ -2,6 +2,7 @@ let schema = require('./base/model')({
     predecessor_id: {type: String, default: ''},
     target_hash: {type: String, default: ''},
     likeFlag: {type: Boolean, default: false},
+    hierarchies: {type: [], default: []},
     receiptId: {type: String, default: ''},
     accountId: {type: String, default: ''},
     receiverId: {type: String, default: ''},

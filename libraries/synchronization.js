@@ -1,19 +1,19 @@
 let AsyncUtil = module.exports = {};
 const model = require('../db.js')
-AsyncUtil.add_post = async function (m,timestamp) {
+AsyncUtil.add_post = async function (m, timestamp) {
 
     try {
         if (m.methodName == 'add_content' && m.status.SuccessValue) {
             // console.log(" load add_post", m);
             let d = JSON.parse(JSON.parse(m.args).args)
-            let hierarchies =JSON.parse(m.args).hierarchies
+            let hierarchies = JSON.parse(m.args).hierarchies
             let row = {
                 ...d,
                 ...m,
                 target_hash: m.status.SuccessValue,
                 createAt: timestamp,
                 data: m,
-                hierarchies:hierarchies,
+                hierarchies: hierarchies,
                 transaction_hash: m.tx.transaction.hash,
                 deleted: false
 
@@ -27,19 +27,18 @@ AsyncUtil.add_post = async function (m,timestamp) {
     }
 }
 
-AsyncUtil.add_encrypt_post = async function (m,timestamp) {
+AsyncUtil.add_encrypt_post = async function (m, timestamp) {
 
 
 }
 
 
-
-AsyncUtil.add_comment = async function (m,timestamp) {
+AsyncUtil.add_comment = async function (m, timestamp) {
     try {
         if (m.methodName == 'add_content' && m.status.SuccessValue) {
             // console.log(" load add_comment", m);
             let d = JSON.parse(m.args)
-            let hierarchies =JSON.parse(m.args).hierarchies
+            let hierarchies = JSON.parse(m.args).hierarchies
             let text = JSON.parse(d.args)
             let Post = model['post'];
             let Comment = model['comment'];
@@ -59,7 +58,7 @@ AsyncUtil.add_comment = async function (m,timestamp) {
                 postId: d.target_hash,
                 commentPostId: commentPostId,
                 createAt: timestamp,
-                hierarchies:hierarchies,
+                hierarchies: hierarchies,
                 data: m,
                 deleted: false,
                 transaction_hash: m.tx.transaction.hash,
@@ -75,8 +74,58 @@ AsyncUtil.add_comment = async function (m,timestamp) {
 
 }
 
-AsyncUtil.add_encrypt_comment = async function (m,timestamp) {
+AsyncUtil.add_encrypt_comment = async function (m, timestamp) {
 
+}
+
+AsyncUtil.like = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'like') {
+
+            let d = JSON.parse(m.args)
+            let hierarchies = JSON.parse(m.args).hierarchies
+            let h = hierarchies[hierarchies.length - 1]
+            let row = {
+                ...d,
+                ...m,
+                target_hash: h.target_hash,
+                createAt: timestamp,
+                data: m,
+                likeFlag: false,
+            }
+            let like = model['like'];
+            let update = await like.updateOrInsertRow({accountId: m.accountId, target_hash: h.target_hash}, row)
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+
+}
+
+AsyncUtil.unlike = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'unlike') {
+
+            let d = JSON.parse(m.args)
+            let hierarchies = JSON.parse(m.args).hierarchies
+            let h = hierarchies[hierarchies.length - 1]
+            let row = {
+                ...d,
+                ...m,
+                target_hash: h.target_hash,
+                createAt: timestamp,
+                data: m,
+                likeFlag: true,
+            }
+            let like = model['like'];
+            let update = await like.updateOrInsertRow({accountId: m.accountId, target_hash: h.target_hash}, row)
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
 
 
 }
