@@ -216,6 +216,7 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
         }
 
 
+
         try {
             if (m.methodName == 'add_encrypt_content' && m.status.SuccessValue) {
                 let d = JSON.parse(m.args)
