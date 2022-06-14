@@ -131,6 +131,33 @@ AsyncUtil.unlike = async function (m, timestamp) {
 }
 
 
+AsyncUtil.report = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'report') {
+
+            let d = JSON.parse(m.args)
+            let hierarchies = JSON.parse(m.args).hierarchies
+            let h = hierarchies[hierarchies.length - 1]
+            let row = {
+                ...d,
+                ...m,
+                target_hash: h.target_hash,
+                createAt: timestamp,
+                data: m,
+                reportFlag: false,
+            }
+            let Report = model['report'];
+
+            let update = await Report.updateOrInsertRow({accountId: m.accountId, target_hash: h.target_hash}, row)
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+
+}
+
 async function getPostId(Comment, Post, comment) {
 
     let comments = await Comment.getRow({target_hash: comment.postId})

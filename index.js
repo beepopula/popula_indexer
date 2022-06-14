@@ -379,6 +379,13 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
             console.log(e);
         }
 
+        try {
+            if (m.methodName == 'report') {
+                await asyncUtil.report(m, timestamp)
+            }
+        } catch (e) {
+            console.log(e);
+        }
 
         try {
             if (m.methodName == 'follow') {
