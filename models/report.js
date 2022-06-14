@@ -10,7 +10,7 @@ let schema = require('./base/model')({
     method: {type: {}, default: {}},
     createAt: {type: Number, default: 0},
     asyncTime: {type: Date, default: Date.now}
-}, "likes");
+}, "report");
 
 schema.index({target_hash: 1})
 schema.index({accountId: 1})
