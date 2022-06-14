@@ -28,7 +28,32 @@ AsyncUtil.add_post = async function (m, timestamp) {
 }
 
 AsyncUtil.add_encrypt_post = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'add_content' && m.status.SuccessValue) {
+            let d = JSON.parse(m.args)
+            let text = JSON.parse(d.encrypt_args)
+            let hierarchies = JSON.parse(m.args).hierarchies
+            // console.log('d ', d);
+            let row = {
+                ...d,
+                ...text,
+                ...m,
+                target_hash: m.status.SuccessValue,
+                hierarchies:hierarchies,
+                createAt: timestamp,
+                data: m,
+                transaction_hash: m.tx.transaction.hash,
+                type: 'encrypt',
+                deleted: false
 
+            }
+            let post = model['post'];
+            let update = await post.updateOrInsertRow({target_hash: m.status.SuccessValue}, row)
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
 
 }
 
@@ -75,7 +100,42 @@ AsyncUtil.add_comment = async function (m, timestamp) {
 }
 
 AsyncUtil.add_encrypt_comment = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'add_content' && m.status.SuccessValue) {
+            let d = JSON.parse(m.args)
+            let text = JSON.parse(d.encrypt_args)
+            let hierarchies = JSON.parse(m.args).hierarchies
+            let Post = model['post'];
+            let Comment = model['comment'];
+            let commentPostId = null
+            let post = await Post.getRow({target_hash: d.target_hash})
+            if (!post) {
+                commentPostId = await getPostId(Comment, Post, {postId: d.target_hash})
+            } else {
+                commentPostId = d.target_hash
+            }
+            let row = {
+                ...d,
+                ...m,
+                ...text,
+                target_hash: m.status.SuccessValue,
+                postId: d.target_hash,
+                commentPostId: commentPostId,
+                createAt: timestamp,
+                hierarchies:hierarchies,
+                data: m,
+                type: 'encrypt',
+                deleted: false,
+                transaction_hash: m.tx.transaction.hash,
 
+            }
+
+            let update = await Comment.updateOrInsertRow({target_hash: m.status.SuccessValue}, row)
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 AsyncUtil.del_content = async function (m, timestamp) {

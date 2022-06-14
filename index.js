@@ -215,6 +215,26 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
             console.log(e);
         }
 
+
+        try {
+            if (m.methodName == 'add_encrypt_content' && m.status.SuccessValue) {
+                // console.log(" load add_post", m);
+                let d = JSON.parse(JSON.parse(m.args).args)
+                let hierarchies = JSON.parse(m.args).hierarchies
+                if (hierarchies.length > 0) {
+                    await asyncUtil.add_encrypt_comment(m, timestamp)
+                } else {
+                    await asyncUtil.add_encrypt_post(m, timestamp)
+                }
+
+            }
+        } catch (e) {
+            console.log(e);
+        }
+
+
+
+
         try {
             if (m.methodName == 'add_post' && m.status.SuccessValue) {
                 // console.log(" load add_post", m);
