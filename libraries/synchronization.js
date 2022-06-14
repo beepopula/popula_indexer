@@ -33,7 +33,8 @@ AsyncUtil.add_encrypt_post = async function (m, timestamp) {
             let d = JSON.parse(m.args)
             console.log("d :",d);
             let text = JSON.parse(d.encrypt_args)
-            let hierarchies = JSON.parse(m.args).hierarchies
+            console.log("text",text);
+            let hierarchies = d.hierarchies
             // console.log('d ', d);
             let row = {
                 ...d,
@@ -104,8 +105,8 @@ AsyncUtil.add_encrypt_comment = async function (m, timestamp) {
     try {
         if (m.methodName == 'add_content' && m.status.SuccessValue) {
             let d = JSON.parse(m.args)
-            let text = JSON.parse(m.args).encrypt_args
-            let hierarchies = JSON.parse(m.args).hierarchies
+            let text = d.encrypt_args
+            let hierarchies = d.hierarchies
             let Post = model['post'];
             let Comment = model['comment'];
             let commentPostId = null
