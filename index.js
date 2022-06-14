@@ -218,8 +218,6 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
 
         try {
             if (m.methodName == 'add_encrypt_content' && m.status.SuccessValue) {
-                // console.log(" load add_post", m);
-                let d = JSON.parse(JSON.parse(m.args).args)
                 let hierarchies = JSON.parse(m.args).hierarchies
                 if (hierarchies.length > 0) {
                     await asyncUtil.add_encrypt_comment(m, timestamp)
