@@ -71,9 +71,9 @@ AsyncUtil.add_comment = async function (m, timestamp) {
             let Post = model['post'];
             let Comment = model['comment'];
             let commentPostId = null
-            let post = await Post.getRow({target_hash: h.target_hash})
+            let post = await Post.getRow({target_hash: d.target_hash})
             if (!post) {
-                commentPostId = await getPostId(Comment, Post, {postId: h.target_hash})
+                commentPostId = await getPostId(Comment, Post, {postId: d.target_hash})
             } else {
                 commentPostId = h.target_hash
             }
@@ -83,7 +83,7 @@ AsyncUtil.add_comment = async function (m, timestamp) {
                 ...m,
                 ...text,
                 target_hash: m.status.SuccessValue,
-                postId: h.target_hash,
+                postId: d.target_hash,
                 commentPostId: commentPostId,
                 createAt: timestamp,
                 hierarchies: hierarchies,
@@ -112,18 +112,18 @@ AsyncUtil.add_encrypt_comment = async function (m, timestamp) {
             let Post = model['post'];
             let Comment = model['comment'];
             let commentPostId = null
-            let post = await Post.getRow({target_hash: h.target_hash})
+            let post = await Post.getRow({target_hash: d.target_hash})
             if (!post) {
-                commentPostId = await getPostId(Comment, Post, {postId: h.target_hash})
+                commentPostId = await getPostId(Comment, Post, {postId: d.target_hash})
             } else {
-                commentPostId = h.target_hash
+                commentPostId = d.target_hash
             }
             let row = {
                 ...d,
                 ...m,
                 ...text,
                 target_hash: m.status.SuccessValue,
-                postId: h.target_hash,
+                postId: d.target_hash,
                 commentPostId: commentPostId,
                 createAt: timestamp,
                 hierarchies: hierarchies,
