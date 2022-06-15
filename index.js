@@ -300,6 +300,42 @@ async function initBlockModel() {
     }
 }
 
+async function asyncSectionData(){
+
+    let blockModel = model['block'];
+    let row = await blockModel.getRow({"name": "optimistic_b"})
+    let final_block_height = row.finalBlockHeight
+    let block_height = row.blockHeight
+
+    try {
+        while (final_block_height > block_height) {
+            block_height += 1
+            let update = await blockModel.updateRow({name: 'optimistic_b'}, {blockHeight: block_height})
+            let block = {}
+            try {
+                block = await provider.block({blockId: block_height})
+            } catch (e) {
+                continue
+            }
+            let transactions = []
+            let receipts = []
+            for (let chunk of block.chunks) {
+                let chunkData = await provider.chunk(chunk.chunk_hash)
+                transactions = transactions.concat(chunkData.transactions)
+                receipts = receipts.concat(chunkData.receipts)
+            }
+            let receiptsResolved = await resolveReceipts(receipts)
+            await resolveTxs(transactions)
+            await storeReceipts(receiptsResolved, block.header.timestamp, block_height, "block")  //TODO
+        }
+    } catch (e) {
+        console.log(e);
+        return true
+    }
+
+    return true
+}
+
 updateDateFromLogs()
 
 
