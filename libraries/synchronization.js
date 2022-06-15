@@ -75,7 +75,7 @@ AsyncUtil.add_comment = async function (m, timestamp) {
             if (!post) {
                 commentPostId = await getPostId(Comment, Post, {postId: d.target_hash})
             } else {
-                commentPostId = h.target_hash
+                commentPostId = d.target_hash
             }
 
             let row = {
