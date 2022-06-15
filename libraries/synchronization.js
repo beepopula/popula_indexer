@@ -1,5 +1,6 @@
 let AsyncUtil = module.exports = {};
 const model = require('../db.js')
+
 AsyncUtil.add_post = async function (m, timestamp) {
 
     try {
@@ -58,7 +59,6 @@ AsyncUtil.add_encrypt_post = async function (m, timestamp) {
     }
 
 }
-
 
 AsyncUtil.add_comment = async function (m, timestamp) {
     try {
@@ -275,6 +275,7 @@ AsyncUtil.quit = async function (m, timestamp) {
 
 
 }
+
 AsyncUtil.join = async function (m, timestamp) {
     try {
         if (m.methodName == 'join') {
@@ -396,7 +397,6 @@ AsyncUtil.follow = async function (m, timestamp) {
 
 }
 
-
 AsyncUtil.add_item = async function (m, timestamp) {
 
     try {
@@ -424,8 +424,8 @@ AsyncUtil.add_item = async function (m, timestamp) {
     }
 
 
-
 }
+
 AsyncUtil.insertNotifications = async function (m, timestamp) {
     let Comment = model['comment'];
     let Post = model['post'];
@@ -526,7 +526,6 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
     }
 
 }
-
 
 async function getPostId(Comment, Post, comment) {
 
