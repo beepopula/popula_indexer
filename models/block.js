@@ -4,6 +4,7 @@ let schema = require('./base/model')({
     blockHeight: {type : Number, default : 0},
     counter: {type : Number, default : 0},
     asyncFlag: { type : Boolean, default : false},
+    debug: { type : Boolean, default : false},
     createAt: {type: Date, default: Date.now}
 }, "blocks");
 

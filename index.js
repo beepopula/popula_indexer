@@ -32,10 +32,17 @@ async function main() {
                 blockAsyncFlag = false
                 blockAsyncFlag = await resolveNewBlock()
             }
-
         }
-
     });
+
+    schedule.scheduleJob('*/1 * * * * *', async function () {
+        let row = await blockModel.getRow({"name": "optimistic_b"})
+        if (row.debug){
+            let update = await blockModel.updateRow({name: 'optimistic_b'}, {debug: false})
+            await asyncSectionData()
+        }
+    });
+
     let asyncBlock = 0
     schedule.scheduleJob('30 * * * * *', async function () {
         let row = await blockModel.getRow({"name": "optimistic"})
@@ -244,7 +251,6 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
     }
 }
 
-
 async function updateDateFromLogs() {
 
     let Notification = model['notification'];
@@ -295,12 +301,13 @@ async function initBlockModel() {
         await blockModel.updateOrInsertRow({"name": "optimistic_b"}, {
             "name": "optimistic_b",
             finalBlockHeight: final_block_height,
-            blockHeight: final_block_height
+            blockHeight: final_block_height,
+            debug: false
         })
     }
 }
 
-async function asyncSectionData(){
+async function asyncSectionData() {
 
     let blockModel = model['block'];
     let row = await blockModel.getRow({"name": "optimistic_b"})
