@@ -163,6 +163,9 @@ AsyncUtil.del_content = async function (m, timestamp) {
             if (comment) {
                 let update = await Comment.updateOrInsertRow({target_hash: h.target_hash}, {deleted: true})
             }
+            let like = model['like'];
+            let update = await like.updateOrInsertRow({target_hash: h.target_hash}, {likeFlag: true,options:"del_content"})
+
         }
     } catch (e) {
         console.log(e);

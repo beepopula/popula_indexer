@@ -5,6 +5,7 @@ let schema = require('./base/model')({
     hierarchies: {type: [], default: []},
     receiptId: {type: String, default: ''},
     accountId: {type: String, default: ''},
+    options: {type: String, default: ''},
     receiverId: {type: String, default: ''},
     data: {type: {}, default: {}},
     method: {type: {}, default: {}},
