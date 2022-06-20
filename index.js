@@ -244,6 +244,7 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
             await asyncUtil.unfollow(m, timestamp)
             await asyncUtil.join(m, timestamp)
             await asyncUtil.quit(m, timestamp)
+            await asyncUtil.add_item(m, timestamp)
             await asyncUtil.insertNotifications(m, timestamp)
         } catch (e) {
             console.log(e);
