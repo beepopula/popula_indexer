@@ -9,9 +9,12 @@ AsyncUtil.add_post = async function (m, timestamp) {
             let d = JSON.parse(JSON.parse(m.args).args)
             console.log("d : ",d);
             let hierarchies = JSON.parse(m.args).hierarchies
+            let options = JSON.parse(m.args).options
+
             let row = {
                 ...d,
                 ...m,
+                options:options,
                 target_hash: m.status.SuccessValue,
                 createAt: timestamp,
                 data: m,
