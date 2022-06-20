@@ -70,6 +70,7 @@ AsyncUtil.add_comment = async function (m, timestamp) {
             // console.log(" load add_comment", m);
             let d = JSON.parse(m.args)
             let hierarchies = JSON.parse(m.args).hierarchies
+            let options = JSON.parse(m.args).options
             let h = hierarchies[hierarchies.length - 1]
             let text = JSON.parse(d.args)
             let Post = model['post'];
@@ -85,6 +86,7 @@ AsyncUtil.add_comment = async function (m, timestamp) {
             let row = {
                 ...d,
                 ...m,
+                options:options,
                 ...text,
                 target_hash: m.status.SuccessValue,
                 postId: d.target_hash,
