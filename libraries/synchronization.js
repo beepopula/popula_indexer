@@ -7,6 +7,7 @@ AsyncUtil.add_post = async function (m, timestamp) {
         if (m.methodName == 'add_content') {
             // console.log(" load add_post", m);
             let d = JSON.parse(JSON.parse(m.args).args)
+            console.log("d : ",d);
             let hierarchies = JSON.parse(m.args).hierarchies
             let row = {
                 ...d,
