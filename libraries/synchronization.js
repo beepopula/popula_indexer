@@ -435,6 +435,33 @@ AsyncUtil.add_item = async function (m, timestamp) {
 
 }
 
+
+AsyncUtil.share_view = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'share_view') {
+
+            let d = JSON.parse(m.args)
+            let hierarchies = JSON.parse(m.args).hierarchies
+            let h = hierarchies[hierarchies.length - 1]
+            let row = {
+                ...d,
+                ...m,
+                target_hash: h.target_hash,
+                createAt: timestamp,
+                data: m,
+                likeFlag: true,
+            }
+            let Share = model['share'];
+            let update = await Share.updateOrInsertRow({accountId: m.accountId, target_hash: h.target_hash,inviter_id:d.inviter_id}, row)
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+
+}
+
 AsyncUtil.insertNotifications = async function (m, timestamp) {
     let Comment = model['comment'];
     let Post = model['post'];
