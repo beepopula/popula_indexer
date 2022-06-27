@@ -438,7 +438,7 @@ AsyncUtil.add_item = async function (m, timestamp) {
 
 AsyncUtil.share_view = async function (m, timestamp) {
     try {
-        if (m.methodName == 'share_view') {
+        if (m.methodName == 'share') {
 
             let d = JSON.parse(m.args)
             let hierarchies = JSON.parse(m.args).hierarchies
