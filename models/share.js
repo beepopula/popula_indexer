@@ -1,5 +1,5 @@
 let schema = require('./base/model')({
-    inviter_id: {type: String, default: ''},
+    account_id: {type: String, default: ''},
     predecessor_id: {type: String, default: ''},
     target_hash: {type: String, default: ''},
     hierarchies: {type: [], default: []},
