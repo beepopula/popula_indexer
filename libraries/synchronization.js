@@ -447,12 +447,13 @@ AsyncUtil.share_view = async function (m, timestamp) {
                 ...d,
                 ...m,
                 target_hash: h.target_hash,
+                account_id:h.account_id,
                 createAt: timestamp,
                 data: m,
                 likeFlag: true,
             }
             let Share = model['share'];
-            let update = await Share.updateOrInsertRow({accountId: m.accountId, target_hash: h.target_hash,account_id:d.account_id}, row)
+            let update = await Share.updateOrInsertRow({accountId: m.accountId, target_hash: h.target_hash,account_id:h.account_id}, row)
         }
     } catch (e) {
         console.log(e);
