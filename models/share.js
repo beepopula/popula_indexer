@@ -12,7 +12,6 @@ let schema = require('./base/model')({
     asyncTime: {type: Date, default: Date.now},
   createAt: {type: Number, default: Date.now},
 }, "share");
-
 schema.index({target_hash: 1})
 
 module.exports = schema
