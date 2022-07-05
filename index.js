@@ -232,7 +232,6 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
         } catch (e) {
             console.log(e);
         }
-
         try {
             await asyncUtil.del_content(m, timestamp)
             await asyncUtil.report(m, timestamp)
