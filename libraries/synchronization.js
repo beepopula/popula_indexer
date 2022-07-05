@@ -356,6 +356,51 @@ AsyncUtil.deploy_community = async function (m, timestamp) {
 
 }
 
+AsyncUtil.deploy_community_by_owner = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'deploy_community_by_owner') {
+            // console.log(" load deploy_community", m);
+            let d = JSON.parse(m.args)
+            let row = {
+                ...d,
+                ...m,
+                communityId: d.name + '.' + m.receiverId,
+                accountId:d.creator_id,
+                by_owner:m.accountId,
+                createAt: timestamp,
+                data: m,
+                followFlag: false,
+                deleted: false,
+
+            }
+            let communities = model['communities'];
+            let Join = model['join'];
+            let update = await communities.updateOrInsertRow({
+                communityId: row.communityId,
+                accountId: row.accountId
+            }, row)
+
+            let u = await Join.updateOrInsertRow({
+                communityId: row.communityId,
+                accountId: row.accountId
+            }, {
+                communityId: row.communityId,
+                accountId: row.accountId,
+                createAt: timestamp,
+                weight: timestamp,
+                creator: 1,
+                joinFlag: false
+            })
+
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+
+}
+
 AsyncUtil.unfollow = async function (m, timestamp) {
     try {
         if (m.methodName == 'unfollow') {
