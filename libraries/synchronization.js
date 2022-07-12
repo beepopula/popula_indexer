@@ -562,6 +562,26 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
                     delete cPost['data']
                     delete cPost['text_sign']
                 }
+
+                let mainPost = await Post.getRow({target_hash: comment.commentPostId})
+                if (mainPost) {
+                    delete cPost['data']
+                    delete cPost['text_sign']
+                    let doc = {
+                        accountId: comment.accountId,
+                        account_id: m.accountId,
+                        target_hash: m.status.SuccessValue,
+                        comment: comment,
+                        options:comment.options,
+                        commentContent: mainPost,
+                        methodName: m.methodName,
+                        type: "mainPost",
+                        createAt: timestamp,
+                    }
+                    await Notification.createRow(doc)
+
+                }
+
                 let cComment = await Comment.getRow({target_hash: comment.postId})
                 if (cComment) {
                     delete cComment['data']
