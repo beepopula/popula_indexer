@@ -579,6 +579,8 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
                     createAt: timestamp,
                 }
                 await Notification.createRow(doc)
+                await Notification.updateRow({target_hash:doc.target_hash,"$or": [{type: "comment"}, {type: "post"}]}, {createAt: timestamp})
+
             } else {
                 console.log(m.methodName, " : ", m.status.SuccessValue);
             }
