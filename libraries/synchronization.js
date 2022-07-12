@@ -1,6 +1,8 @@
 let AsyncUtil = module.exports = {};
 const model = require('../db.js')
-
+const config = require("config")
+const nearConfig = config.get('nearWallet')
+const constants = config.get('constants');
 
 
 AsyncUtil.add_user = async function (m, timestamp){
