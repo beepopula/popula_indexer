@@ -579,7 +579,6 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
                         createAt: timestamp,
                     }
                     await Notification.createRow(doc)
-
                 }
 
                 let cComment = await Comment.getRow({target_hash: comment.postId})
