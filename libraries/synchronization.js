@@ -621,6 +621,8 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
             type: "like",
             createAt: timestamp,
         }
+
+        await Notification.updateRow({target_hash:h.target_hash,"$or": [{type: "comment"}, {type: "post"}]}, {createAt: timestamp})
         await Notification.updateOrInsertRow({
             accountId: m.accountId,
             target_hash: h.target_hash,
