@@ -564,7 +564,7 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
                 }
 
                 let mainPost = await Post.getRow({target_hash: comment.commentPostId})
-                if (mainPost&&(mainPost.target_hash!=comment.postId)) {
+                if (mainPost&&(comment.commentPostId!=comment.postId)) {
                     delete mainPost['data']
                     delete mainPost['text_sign']
                     let doc = {
