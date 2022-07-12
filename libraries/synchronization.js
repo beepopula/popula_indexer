@@ -1,6 +1,42 @@
 let AsyncUtil = module.exports = {};
 const model = require('../db.js')
 
+
+
+AsyncUtil.add_user = async function (m, timestamp){
+    try {
+        let row = {
+            ...m,
+            createAt: timestamp,
+            data: m
+        }
+        let log = model['log'];
+        let update = await log.updateOrInsertRow({
+            methodName: m.methodName,
+            blockHeight: block_height,
+            createAt: row.createAt
+        }, row)
+        if (m.accountId) {
+            let User = model['user'];
+            let join = model['join'];
+            let u = await User.updateOrInsertRow({account_id: m.accountId}, {account_id: m.accountId})
+            let update = await join.updateOrInsertRow(
+                {communityId: constants.MAIN_CONTRACT, accountId: m.accountId},
+                {
+                    communityId: constants.MAIN_CONTRACT,
+                    accountId: m.accountId,
+                    createAt: timestamp,
+                    weight: timestamp,
+                    joinFlag: false,
+                    creator: 0
+                })
+        }
+
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 AsyncUtil.add_post = async function (m, timestamp) {
 
     try {
@@ -442,6 +478,22 @@ AsyncUtil.follow = async function (m, timestamp) {
             }
             let follow = model['follow'];
             let update = await follow.updateOrInsertRow({accountId: m.accountId, account_id: d.account_id}, row)
+
+            if (row.account_id) {
+                let User = model['user'];
+                let join = model['join'];
+                let u = await User.updateOrInsertRow({account_id: row.account_id}, {account_id: row.account_id})
+                let update = await join.updateOrInsertRow(
+                    {communityId: constants.MAIN_CONTRACT, accountId: row.account_id},
+                    {
+                        communityId: constants.MAIN_CONTRACT,
+                        accountId: m.accountId,
+                        createAt: timestamp,
+                        weight: timestamp,
+                        joinFlag: false,
+                        creator: 0
+                    })
+            }
 
         }
     } catch (e) {
