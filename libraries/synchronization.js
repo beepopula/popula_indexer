@@ -481,22 +481,6 @@ AsyncUtil.follow = async function (m, timestamp) {
             let follow = model['follow'];
             let update = await follow.updateOrInsertRow({accountId: m.accountId, account_id: d.account_id}, row)
 
-            if (row.account_id) {
-                let User = model['user'];
-                let join = model['join'];
-                let u = await User.updateOrInsertRow({account_id: row.account_id}, {account_id: row.account_id})
-                let update = await join.updateOrInsertRow(
-                    {communityId: constants.MAIN_CONTRACT, accountId: row.account_id},
-                    {
-                        communityId: constants.MAIN_CONTRACT,
-                        accountId: row.account_id,
-                        createAt: timestamp,
-                        weight: timestamp,
-                        joinFlag: false,
-                        creator: 0
-                    })
-            }
-
         }
     } catch (e) {
         console.log(e);
