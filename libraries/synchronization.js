@@ -489,7 +489,7 @@ AsyncUtil.follow = async function (m, timestamp) {
                     {communityId: constants.MAIN_CONTRACT, accountId: row.account_id},
                     {
                         communityId: constants.MAIN_CONTRACT,
-                        accountId: m.accountId,
+                        accountId: row.account_id,
                         createAt: timestamp,
                         weight: timestamp,
                         joinFlag: false,
