@@ -575,7 +575,7 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
                         options:comment.options,
                         commentContent: mainPost,
                         methodName: m.methodName,
-                        type: "mainPost",
+                        type: "comment",
                         createAt: timestamp,
                     }
                     await Notification.createRow(doc)
