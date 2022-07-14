@@ -364,7 +364,6 @@ AsyncUtil.deploy_community = async function (m, timestamp) {
                 data: m,
                 followFlag: false,
                 deleted: false,
-
                 website: {},
                 twitter: {},
                 discord: {},
