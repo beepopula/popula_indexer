@@ -1,5 +1,43 @@
 let AsyncUtil = module.exports = {};
 const model = require('../db.js')
+const config = require("config")
+const nearConfig = config.get('nearWallet')
+const constants = config.get('constants');
+
+
+AsyncUtil.add_user = async function (m, timestamp){
+    try {
+        let row = {
+            ...m,
+            createAt: timestamp,
+            data: m
+        }
+        let log = model['log'];
+        let update = await log.updateOrInsertRow({
+            methodName: m.methodName,
+            blockHeight: block_height,
+            createAt: row.createAt
+        }, row)
+        if (m.accountId) {
+            let User = model['user'];
+            let join = model['join'];
+            let u = await User.updateOrInsertRow({account_id: m.accountId}, {account_id: m.accountId})
+            let update = await join.updateOrInsertRow(
+                {communityId: constants.MAIN_CONTRACT, accountId: m.accountId},
+                {
+                    communityId: constants.MAIN_CONTRACT,
+                    accountId: m.accountId,
+                    createAt: timestamp,
+                    weight: timestamp,
+                    joinFlag: false,
+                    creator: 0
+                })
+        }
+
+    } catch (e) {
+        console.log(e);
+    }
+}
 
 AsyncUtil.add_post = async function (m, timestamp) {
 
@@ -7,10 +45,14 @@ AsyncUtil.add_post = async function (m, timestamp) {
         if (m.methodName == 'add_content') {
             // console.log(" load add_post", m);
             let d = JSON.parse(JSON.parse(m.args).args)
+            console.log("d : ",d);
             let hierarchies = JSON.parse(m.args).hierarchies
+            let options = JSON.parse(m.args).options
+
             let row = {
                 ...d,
                 ...m,
+                options:options,
                 target_hash: m.status.SuccessValue,
                 createAt: timestamp,
                 data: m,
@@ -66,24 +108,26 @@ AsyncUtil.add_comment = async function (m, timestamp) {
             // console.log(" load add_comment", m);
             let d = JSON.parse(m.args)
             let hierarchies = JSON.parse(m.args).hierarchies
+            let options = JSON.parse(m.args).options
             let h = hierarchies[hierarchies.length - 1]
             let text = JSON.parse(d.args)
             let Post = model['post'];
             let Comment = model['comment'];
             let commentPostId = null
-            let post = await Post.getRow({target_hash: h.target_hash})
+            let post = await Post.getRow({target_hash: d.target_hash})
             if (!post) {
-                commentPostId = await getPostId(Comment, Post, {postId: h.target_hash})
+                commentPostId = await getPostId(Comment, Post, {postId: d.target_hash})
             } else {
-                commentPostId = h.target_hash
+                commentPostId = d.target_hash
             }
 
             let row = {
                 ...d,
                 ...m,
+                options:options,
                 ...text,
                 target_hash: m.status.SuccessValue,
-                postId: h.target_hash,
+                postId: d.target_hash,
                 commentPostId: commentPostId,
                 createAt: timestamp,
                 hierarchies: hierarchies,
@@ -112,18 +156,18 @@ AsyncUtil.add_encrypt_comment = async function (m, timestamp) {
             let Post = model['post'];
             let Comment = model['comment'];
             let commentPostId = null
-            let post = await Post.getRow({target_hash: h.target_hash})
+            let post = await Post.getRow({target_hash: d.target_hash})
             if (!post) {
-                commentPostId = await getPostId(Comment, Post, {postId: h.target_hash})
+                commentPostId = await getPostId(Comment, Post, {postId: d.target_hash})
             } else {
-                commentPostId = h.target_hash
+                commentPostId = d.target_hash
             }
             let row = {
                 ...d,
                 ...m,
                 ...text,
                 target_hash: m.status.SuccessValue,
-                postId: h.target_hash,
+                postId: d.target_hash,
                 commentPostId: commentPostId,
                 createAt: timestamp,
                 hierarchies: hierarchies,
@@ -163,6 +207,9 @@ AsyncUtil.del_content = async function (m, timestamp) {
             if (comment) {
                 let update = await Comment.updateOrInsertRow({target_hash: h.target_hash}, {deleted: true})
             }
+            let like = model['like'];
+            let update = await like.updateRows({target_hash: h.target_hash}, {likeFlag: true,options:"del_content"})
+
         }
     } catch (e) {
         console.log(e);
@@ -317,6 +364,57 @@ AsyncUtil.deploy_community = async function (m, timestamp) {
                 data: m,
                 followFlag: false,
                 deleted: false,
+                website: {},
+                twitter: {},
+                discord: {},
+
+            }
+            let communities = model['communities'];
+            let Join = model['join'];
+            let update = await communities.updateOrInsertRow({
+                communityId: row.communityId,
+                accountId: row.accountId
+            }, row)
+
+            let u = await Join.updateOrInsertRow({
+                communityId: row.communityId,
+                accountId: row.accountId
+            }, {
+                communityId: row.communityId,
+                accountId: row.accountId,
+                createAt: timestamp,
+                weight: timestamp,
+                creator: 1,
+                joinFlag: false
+            })
+
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+
+}
+
+AsyncUtil.deploy_community_by_owner = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'deploy_community_by_owner') {
+            // console.log(" load deploy_community", m);
+            let d = JSON.parse(m.args)
+            let row = {
+                ...d,
+                ...m,
+                communityId: d.name + '.' + m.receiverId,
+                accountId:d.creator_id,
+                by_owner:m.accountId,
+                createAt: timestamp,
+                data: m,
+                followFlag: false,
+                deleted: false,
+                website: {},
+                twitter: {},
+                discord: {},
 
             }
             let communities = model['communities'];
@@ -426,6 +524,33 @@ AsyncUtil.add_item = async function (m, timestamp) {
 
 }
 
+
+AsyncUtil.share_view = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'share') {
+
+            let d = JSON.parse(m.args)
+            let hierarchies = JSON.parse(m.args).hierarchies
+            let h = hierarchies[hierarchies.length - 1]
+            let row = {
+                ...d,
+                ...m,
+                target_hash: h.target_hash,
+                account_id:h.account_id,
+                createAt: timestamp,
+                data: m,
+                likeFlag: true,
+            }
+            let Share = model['share'];
+            let update = await Share.updateOrInsertRow({accountId: m.accountId, target_hash: h.target_hash,account_id:h.account_id}, row)
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+
+}
+
 AsyncUtil.insertNotifications = async function (m, timestamp) {
     let Comment = model['comment'];
     let Post = model['post'];
@@ -443,6 +568,25 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
                     delete cPost['data']
                     delete cPost['text_sign']
                 }
+
+                let mainPost = await Post.getRow({target_hash: comment.commentPostId})
+                if (mainPost&&(comment.commentPostId!=comment.postId)) {
+                    delete mainPost['data']
+                    delete mainPost['text_sign']
+                    let doc = {
+                        accountId: comment.accountId,
+                        account_id: m.accountId,
+                        target_hash: m.status.SuccessValue,
+                        comment: comment,
+                        options:comment.options,
+                        commentContent: mainPost,
+                        methodName: m.methodName,
+                        type: "mainPost",
+                        createAt: timestamp,
+                    }
+                    await Notification.createRow(doc)
+                }
+
                 let cComment = await Comment.getRow({target_hash: comment.postId})
                 if (cComment) {
                     delete cComment['data']
@@ -453,12 +597,15 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
                     account_id: m.accountId,
                     target_hash: m.status.SuccessValue,
                     comment: comment,
+                    options:comment.options,
                     commentContent: cComment ? cComment : cPost,
                     methodName: m.methodName,
                     type: "comment",
                     createAt: timestamp,
                 }
                 await Notification.createRow(doc)
+                await Notification.updateRow({target_hash:doc.target_hash,"$or": [{type: "comment"}, {type: "post"}]}, {createAt: timestamp})
+
             } else {
                 console.log(m.methodName, " : ", m.status.SuccessValue);
             }
@@ -473,6 +620,7 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
                     account_id: m.accountId,
                     target_hash: m.status.SuccessValue,
                     post: post,
+                    options:post.options,
                     comment: {},
                     commentContent: {},
                     methodName: m.methodName,
@@ -500,6 +648,8 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
             type: "like",
             createAt: timestamp,
         }
+
+        await Notification.updateRow({target_hash:h.target_hash,"$or": [{type: "comment"}, {type: "post"}]}, {createAt: timestamp})
         await Notification.updateOrInsertRow({
             accountId: m.accountId,
             target_hash: h.target_hash,

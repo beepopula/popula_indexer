@@ -8,6 +8,7 @@ let schema = require('./base/model')({
     type: {type: String, default: ''},
     comment: {type: {}, default: {}},
     post: {type: {}, default: {}},
+    options: {type: [], default: []},
     commentContent: {type: {}, default: {}},
     data: {type: {}, default: {}},
     createAt: {type: Number, default: 0},

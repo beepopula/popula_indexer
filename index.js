@@ -116,15 +116,13 @@ async function resolveTxs(transactions) {
 async function resolveReceipts(receipts) {
     let receiptsResolved = []
     for (let receipt of receipts) {
-        console.log(" m :", receipt.receiver_id.includes(constants.MAIN_ACCOUNT));
-        console.log(" m :", receipt.receiver_id);
+
 
         if (receipt.receiver_id.includes(constants.MAIN_ACCOUNT) && receipt.receipt.Action && receipt.receipt.Action.actions[0].FunctionCall) {
-            console.log("receipt ", receipt);
+
             let functionCall = receipt.receipt.Action.actions[0].FunctionCall
             let txDigest = txMap[receipt.receipt.Action.signer_id]
             if (!txDigest || !txDigest[txDigest.length - 1]) {
-                console.log("txDigest",txDigest);
                 continue
             }
             let tx = await provider.txStatus(txDigest[txDigest.length - 1].hash, txDigest[txDigest.length - 1].signer_id)
@@ -233,17 +231,19 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
         } catch (e) {
             console.log(e);
         }
-
         try {
             await asyncUtil.del_content(m, timestamp)
             await asyncUtil.report(m, timestamp)
             await asyncUtil.deploy_community(m, timestamp)
+            await asyncUtil.deploy_community_by_owner(m, timestamp)
             await asyncUtil.like(m, timestamp)
             await asyncUtil.unlike(m, timestamp)
             await asyncUtil.follow(m, timestamp)
             await asyncUtil.unfollow(m, timestamp)
             await asyncUtil.join(m, timestamp)
             await asyncUtil.quit(m, timestamp)
+            await asyncUtil.add_item(m, timestamp)
+            await asyncUtil.share_view(m, timestamp)
             await asyncUtil.insertNotifications(m, timestamp)
         } catch (e) {
             console.log(e);
