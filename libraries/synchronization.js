@@ -464,7 +464,7 @@ AsyncUtil.set_owner = async function (m, timestamp) {
                 communityId:  m.receiverId,
                 accountId:d.account_id,
                 set_owner:m.accountId,
-                createAt: timestamp,
+              //  createAt: timestamp,
                 data: m,
                 followFlag: false,
                 deleted: false,
