@@ -344,8 +344,8 @@ async function asyncSectionData() {
     return true
 }
 
-updateDateFromLogs()
-
-
+if (process.env.NODE_ENV == 'devtestnet') {
+    updateDateFromLogs()
+}
 main()
 timer.get_final_block_height(model)
