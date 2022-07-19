@@ -476,7 +476,7 @@ AsyncUtil.set_owner = async function (m, timestamp) {
                 accountId: row.set_owner
             }, row)
 
-            let u = await Join.updateOrInsertRow({
+            await Join.updateOrInsertRow({
                 communityId: row.communityId,
                 accountId: row.accountId
             }, {
@@ -488,7 +488,7 @@ AsyncUtil.set_owner = async function (m, timestamp) {
                 joinFlag: false
             })
 
-            let u = await Join.updateOrInsertRow({
+           await Join.updateOrInsertRow({
                 communityId: row.communityId,
                 accountId: row.set_owner
             }, {
