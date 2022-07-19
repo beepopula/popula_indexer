@@ -453,6 +453,76 @@ AsyncUtil.deploy_community_by_owner = async function (m, timestamp) {
 
 }
 
+AsyncUtil.set_owner = async function (m, timestamp) {
+    try {
+        if (m.methodName == 'set_owner') {
+            // console.log(" load deploy_community", m);
+            let d = JSON.parse(m.args)
+            let row = {
+                ...d,
+                ...m,
+                communityId:  m.receiverId,
+                accountId:d.account_id,
+                set_owner:m.accountId,
+                createAt: timestamp,
+                data: m,
+                followFlag: false,
+                deleted: false,
+            }
+            let communities = model['communities'];
+            let Join = model['join'];
+            let update = await communities.updateOrInsertRow({
+                communityId: row.communityId,
+                accountId: row.set_owner
+            }, row)
+
+            let u = await Join.updateOrInsertRow({
+                communityId: row.communityId,
+                accountId: row.accountId
+            }, {
+                communityId: row.communityId,
+                accountId: row.accountId,
+                createAt: timestamp,
+                weight: timestamp,
+                creator: 1,
+                joinFlag: false
+            })
+
+            let u = await Join.updateOrInsertRow({
+                communityId: row.communityId,
+                accountId: row.set_owner
+            }, {
+                communityId: row.communityId,
+                accountId: row.set_owner,
+                createAt: timestamp,
+                weight: timestamp,
+                creator: 0,
+                joinFlag: false
+            })
+
+
+            if (d.account_id) {
+                let User = model['user'];
+                let u = await User.updateOrInsertRow({account_id:d.account_id}, {account_id: d.account_id})
+                let update = await Join.updateOrInsertRow(
+                    {communityId: constants.MAIN_CONTRACT, accountId:d.account_id},
+                    {
+                        communityId: constants.MAIN_CONTRACT,
+                        accountId:d.account_id,
+                        createAt: timestamp,
+                        weight: timestamp,
+                        joinFlag: false,
+                        creator: 0
+                    })
+            }
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+
+}
 AsyncUtil.unfollow = async function (m, timestamp) {
     try {
         if (m.methodName == 'unfollow') {

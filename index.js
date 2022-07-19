@@ -237,6 +237,7 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
             await asyncUtil.report(m, timestamp)
             await asyncUtil.deploy_community(m, timestamp)
             await asyncUtil.deploy_community_by_owner(m, timestamp)
+            await asyncUtil.set_owner(m, timestamp)
             await asyncUtil.like(m, timestamp)
             await asyncUtil.unlike(m, timestamp)
             await asyncUtil.follow(m, timestamp)
