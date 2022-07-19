@@ -364,6 +364,9 @@ AsyncUtil.deploy_community = async function (m, timestamp) {
                 data: m,
                 followFlag: false,
                 deleted: false,
+                website: {},
+                twitter: {},
+                discord: {},
 
             }
             let communities = model['communities'];
@@ -409,6 +412,9 @@ AsyncUtil.deploy_community_by_owner = async function (m, timestamp) {
                 data: m,
                 followFlag: false,
                 deleted: false,
+                website: {},
+                twitter: {},
+                discord: {},
 
             }
             let communities = model['communities'];
