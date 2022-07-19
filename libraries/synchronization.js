@@ -364,9 +364,6 @@ AsyncUtil.deploy_community = async function (m, timestamp) {
                 data: m,
                 followFlag: false,
                 deleted: false,
-                website: {},
-                twitter: {},
-                discord: {},
 
             }
             let communities = model['communities'];
@@ -412,10 +409,6 @@ AsyncUtil.deploy_community_by_owner = async function (m, timestamp) {
                 data: m,
                 followFlag: false,
                 deleted: false,
-                website: {},
-                twitter: {},
-                discord: {},
-
             }
             let communities = model['communities'];
             let Join = model['join'];
@@ -436,6 +429,21 @@ AsyncUtil.deploy_community_by_owner = async function (m, timestamp) {
                 joinFlag: false
             })
 
+
+            if (d.creator_id) {
+                let User = model['user'];
+                let u = await User.updateOrInsertRow({account_id:d.creator_id}, {account_id: d.creator_id})
+                let update = await Join.updateOrInsertRow(
+                    {communityId: constants.MAIN_CONTRACT, accountId:d.creator_id},
+                    {
+                        communityId: constants.MAIN_CONTRACT,
+                        accountId:d.creator_id,
+                        createAt: timestamp,
+                        weight: timestamp,
+                        joinFlag: false,
+                        creator: 0
+                    })
+            }
 
         }
     } catch (e) {
