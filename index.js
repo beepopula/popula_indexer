@@ -236,6 +236,7 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
             await asyncUtil.report(m, timestamp)
             await asyncUtil.deploy_community(m, timestamp)
             await asyncUtil.deploy_community_by_owner(m, timestamp)
+            await asyncUtil.set_owner(m, timestamp)
             await asyncUtil.like(m, timestamp)
             await asyncUtil.unlike(m, timestamp)
             await asyncUtil.follow(m, timestamp)
@@ -343,8 +344,8 @@ async function asyncSectionData() {
     return true
 }
 
-updateDateFromLogs()
-
-
+if (process.env.NODE_ENV == 'devtestnet') {
+    updateDateFromLogs()
+}
 main()
 timer.get_final_block_height(model)

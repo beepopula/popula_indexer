@@ -16,6 +16,7 @@ let schema = require('./base/model')({
     receiptId: {type: String, default: ''},
     accountId: {type: String, default: ''},
     by_owner: {type: String, default: ''},
+    set_owner: {type: String, default: ''},
     data: {type: {}, default: {}},
     method: {type: {}, default: {}},
     deleted: {type: Boolean, default: false},
