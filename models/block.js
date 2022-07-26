@@ -5,8 +5,8 @@ let schema = require('./base/model')({
     counter: {type : Number, default : 0},
     async_flag: { type : Boolean, default : false},
     debug: { type : Boolean, default : false},
-    createAt: {type: Date, default: Date.now}
+    create_at: {type: Date, default: Date.now}
 }, "blocks");
 
-schema.index({createAt: 1})
+schema.index({create_at: 1})
 module.exports = schema
