@@ -1,19 +1,19 @@
 let schema = require('./base/model')({
     predecessor_id: {type: String, default: ''},
     target_hash: {type: String, default: ''},
-    reportFlag: {type: Boolean, default: false},
+    report_flag: {type: Boolean, default: false},
     hierarchies: {type: [], default: []},
-    receiptId: {type: String, default: ''},
-    accountId: {type: String, default: ''},
-    receiverId: {type: String, default: ''},
+    receipt_id: {type: String, default: ''},
+    account_id: {type: String, default: ''},
+    receiver_id: {type: String, default: ''},
     data: {type: {}, default: {}},
-    method: {type: {}, default: {}},
-    createAt: {type: Number, default: 0},
-    asyncTime: {type: Date, default: Date.now}
+    method_name:{type: String, default: ''},
+    create_at: {type: Number, default: 0},
+    async_time: {type: Date, default: Date.now}
 }, "report");
 
 schema.index({target_hash: 1})
-schema.index({accountId: 1})
-schema.index({likeFlag: 1})
+schema.index({account_id: 1})
+schema.index({like_flag: 1})
 
 module.exports = schema

@@ -1,5 +1,5 @@
 let schema = require('./base/model')({
-    accountId: {type: String, default: ''},
+    account_id: {type: String, default: ''},
     predecessor_id: {type: String, default: ''},
     token_series_id: {type: String, default: ''},
     text: {type: String, default: ''},
@@ -16,19 +16,19 @@ let schema = require('./base/model')({
     score: {type: Number, default: 0},
     blur_imgs: {type: {}, default: {}},
     target_hash: {type: String, default: ''},
-    receiptId: {type: String, default: ''},
-    receiverId: {type: String, default: ''},
+    receipt_id: {type: String, default: ''},
+    receiver_id: {type: String, default: ''},
     data: {type: {}, default: {}},
     token_metadata: {type: {}, default: {}},
-    methodName: {type: String, default: String},
+    method_name: {type: String, default: String},
     type: {type: String, default: ''},
     gas_used: {type: String, default: String},
     deleted: {type: Boolean, default: false},
-    createAt: {type: Number, default: 0},
-    asyncTime: {type: Date, default: Date.now}
+    create_at: {type: Number, default: 0},
+    async_time: {type: Date, default: Date.now}
 }, "posts");
 
-schema.index({accountId: 1})
+schema.index({account_id: 1})
 schema.index({target_hash: 1})
 
 module.exports = schema

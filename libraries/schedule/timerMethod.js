@@ -11,16 +11,16 @@ timer.get_final_block_height= function () {
         let Comment = model["comment"]
         let posts = await Post.getRows({})
         for (let i = 0; i < posts.length; i++) {
-            let likeCount = await Like.getRowsCount({target_hash: posts[i]['target_hash'], likeFlag: false});
-            let commentCount = await Comment.getRowsCount({postId: posts[i]['target_hash']});
-            let commentItems = await Comment.getRows({postId: posts[i]['target_hash']});
+            let likeCount = await Like.getRowsCount({target_hash: posts[i]['target_hash'], like_flag: false});
+            let commentCount = await Comment.getRowsCount({post_id: posts[i]['target_hash']});
+            let commentItems = await Comment.getRows({post_id: posts[i]['target_hash']});
             let users =[]
             let likes =0
             for (let i=0;i<commentItems.length;i++){
-                if (users.indexOf(commentItems[i].accountId)==-1) {
+                if (users.indexOf(commentItems[i].account_id)==-1) {
                     users.push()
                 }
-                let likeItems = await Like.getRowsCount({target_hash: commentItems[i]['target_hash'], likeFlag: false});
+                let likeItems = await Like.getRowsCount({target_hash: commentItems[i]['target_hash'], like_flag: false});
                 likes=likes+likeItems
             }
 
@@ -39,16 +39,16 @@ timer.get_final_block_height= function () {
         let Comment = model["comment"]
         let comments = await Comment.getRows({})
         for (let i = 0; i < comments.length; i++) {
-            let likeCount = await Like.getRowsCount({target_hash: comments[i]['target_hash'], likeFlag: false});
-            let commentCount = await Comment.getRowsCount({postId: comments[i]['target_hash']});
-            let commentItems = await Comment.getRows({postId: comments[i]['target_hash']});
+            let likeCount = await Like.getRowsCount({target_hash: comments[i]['target_hash'], like_flag: false});
+            let commentCount = await Comment.getRowsCount({post_id: comments[i]['target_hash']});
+            let commentItems = await Comment.getRows({post_id: comments[i]['target_hash']});
             let users =[]
             let likes =0
             for (let i=0;i<commentItems.length;i++){
-                if (users.indexOf(commentItems[i].accountId)==-1) {
+                if (users.indexOf(commentItems[i].account_id)==-1) {
                     users.push()
                 }
-                let likeItems = await Like.getRowsCount({target_hash: commentItems[i]['target_hash'], likeFlag: false});
+                let likeItems = await Like.getRowsCount({target_hash: commentItems[i]['target_hash'], like_flag: false});
                 likes=likes+likeItems
             }
 
@@ -65,8 +65,8 @@ timer.get_final_block_height= function () {
         let Join = model["join"]
         let rows =await  Communities.getRows({})
         for (let i =0 ;i<rows.length;i++){
-            let members = await Join.getRowsCount({communityId: rows[i].communityId, joinFlag: false});
-            await  Communities.updateRow({communityId: rows[i].communityId}, {score: members})
+            let members = await Join.getRowsCount({community_id: rows[i].community_id, join_flag: false});
+            await  Communities.updateRow({community_id: rows[i].community_id}, {score: members})
         }
     });
 

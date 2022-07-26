@@ -9,13 +9,12 @@ let schema = require('./base/model')({
   email: {type: String, default: ''},
   token_id: {type: {}, default: {}},
   data: {type: {}, default: {}},
-  methodName: {type: String, default: String},
+  method_name: {type: String, default: String},
   type: {type: String, default: ''},
   gas_used: {type: String, default: String},
-  createAt: {type: Number, default: 0},
-  asyncTime: {type: Date, default: Date.now}
+  create_at: {type: Number, default: 0},
+  async_time: {type: Date, default: Date.now}
 }, "users");
 
 schema.index({account_id: 1})
-
 module.exports = schema

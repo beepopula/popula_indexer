@@ -1,10 +1,10 @@
 let schema = require('./base/model')({
-    blockHeight:{type: Number, default: 0},
-    methodName:{type: String, default: ''},
+    block_height:{type: Number, default: 0},
+    method_name:{type: String, default: ''},
     data: {type: {}, default: {}},
-    createAt:{type: Number, default: 0},
-    asyncTime: {type: Date, default: Date.now}
+    create_at:{type: Number, default: 0},
+    async_time: {type: Date, default: Date.now}
 }, "logs");
 
-schema.index({createAt: 1})
+schema.index({create_at: 1})
 module.exports = schema
