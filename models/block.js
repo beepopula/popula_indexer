@@ -1,9 +1,9 @@
 let schema = require('./base/model')({
     name: {type : String, default : ''},
-    finalBlockHeight: {type : Number, default : 0},
-    blockHeight: {type : Number, default : 0},
+    final_block_height: {type : Number, default : 0},
+    block_height: {type : Number, default : 0},
     counter: {type : Number, default : 0},
-    asyncFlag: { type : Boolean, default : false},
+    async_flag: { type : Boolean, default : false},
     debug: { type : Boolean, default : false},
     createAt: {type: Date, default: Date.now}
 }, "blocks");
