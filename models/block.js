@@ -9,5 +9,4 @@ let schema = require('./base/model')({
 }, "blocks");
 
 schema.index({createAt: 1})
-
 module.exports = schema
