@@ -189,7 +189,7 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
                 let join = model['join'];
                 let u = await User.updateOrInsertRow({account_id: m.account_id}, {account_id: m.account_id})
                 let update = await join.updateOrInsertRow(
-                    {communityId: constants.MAIN_CONTRACT, account_id: m.account_id},
+                    {community_id: constants.MAIN_CONTRACT, account_id: m.account_id},
                     {
                         community_id: constants.MAIN_CONTRACT,
                         account_id: m.account_id,
@@ -276,9 +276,9 @@ async function asyncUserToPopula() {
     let users = await User.getRows({})
     for (let i = 0; i < users.length; i++) {
         let update = await Join.updateOrInsertRow(
-            {communityId: constants.MAIN_CONTRACT, account_id: users[i]['account_id']},
+            {community_id: constants.MAIN_CONTRACT, account_id: users[i]['account_id']},
             {
-                communityId: constants.MAIN_CONTRACT,
+                community_id: constants.MAIN_CONTRACT,
                 account_id: users[i]['account_id'],
                 create_at: Date.now(),
                 weight: Date.now(),
