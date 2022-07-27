@@ -104,10 +104,20 @@ function model(schema,tableName){
 
     Schema.statics.deleteRow = async function (condition) {
         try {
-          return await this.remove(condition);
+          return await this.deleteOne(condition);
         } catch (e) {
           console.log(e)
           return null;
+        }
+    };
+
+
+    Schema.statics.deleteRows = async function (condition) {
+        try {
+            return await this.deleteMany(condition);
+        } catch (e) {
+            console.log(e)
+            return null;
         }
     };
 
