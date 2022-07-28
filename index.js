@@ -255,7 +255,7 @@ async function storeReceipts(receiptsResolved, timestamp, block_height, type) {
 async function updateDateFromLogs() {
 
     let Notification = model['notification'];
-    await Notification.deleteRow({})
+    await Notification.deleteRows({})
 
     let Log = model['log'];
     let logs = await Log.getRows()
