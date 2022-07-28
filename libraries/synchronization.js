@@ -740,11 +740,11 @@ AsyncUtil.insertNotifications = async function (m, timestamp) {
     if (m.method_name == 'follow') {
         let d = JSON.parse(m.args)
         let doc = {
+            ...d,
             account_id: m.account_id,
             account_id_passive: d.account_id,
             method_name: m.method_name,
             type: "follow",
-            ...d,
             create_at: timestamp,
         }
         await Notification.updateOrInsertRow({
